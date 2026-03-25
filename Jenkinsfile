@@ -38,15 +38,18 @@ pipeline{
         stage('Deploy'){
             agent{
                 docker{
-                    // image 'node:24.14.0-alpine'
-                    image 'my-docker-image'
+                    image 'amazon/aws-cli'
                     reuseNode true
+                    args '--entrypoint= ""'
                 }
             }
             steps{
+                withCredentials([usernamePassword(credentialsId: 'my-temp', passwordVariable: 'WS_SECRET_ACCESS_KEY', usernameVariable: 'WS_ACCESS_KEY_ID')]) {
                 sh'''
-                    
+                aws --version
+                aws s3 ls
                 '''
+                }
             }
         }
     }
